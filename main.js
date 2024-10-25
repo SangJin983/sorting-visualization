@@ -13,8 +13,10 @@ generateBtnElement.addEventListener("click", () => {
 // `정렬 시작` 버튼 클릭시, 버블 정렬
 sortingBtnElement.addEventListener("click", async () => {
   sortingBtnElement.disabled = true;
+  generateBtnElement.disabled = true;
   await bubbleSort(getCurrentArray());
   sortingBtnElement.disabled = false;
+  generateBtnElement.disabled = false;
 });
 
 // 배열 시각화
