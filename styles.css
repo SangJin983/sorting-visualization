@@ -43,7 +43,7 @@ h1 {
   transition: border-color 0.3s ease, background-color 0.3s ease; /* 테두리와 배경 색상 전환*/
 }
 
-.sort-select:focus {
+.sort-choice:focus {
   border-color: #888;
   background-color: #e0e0e0;
 }
