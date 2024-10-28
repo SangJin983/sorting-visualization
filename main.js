@@ -1,6 +1,6 @@
 import { generateRandomArray } from "./utils/generateRandomArray";
 import { ArrayRenderer } from "./Renderer";
-import { BubbleSortVisualizer } from "./sortingVisualizer";
+import { BubbleSortVisualizer } from "./SortingVisualizer";
 
 const arrayContainerElement = document.querySelector(".array-container");
 const btnContainerElement = document.querySelector(".btn-container");
