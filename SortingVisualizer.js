@@ -1,4 +1,5 @@
 import { BarRenderer } from "./Renderer";
+import { pause } from "./utils/pause";
 
 export class SortingVisualizer {
   constructor(array) {
@@ -31,7 +32,7 @@ export class BubbleSortVisualizer extends SortingVisualizer {
         );
 
         // 1초 대기 후 진행
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await pause(1000);
 
         if (result[j] > result[j + 1]) {
           // 스왑
@@ -67,7 +68,7 @@ export class SelectionSortVisualizer extends SortingVisualizer {
       for (let j = i + 1; j < result.length; j += 1) {
         BarRenderer.setBackgroundColor("red", barsElement[j]); // bar2 선택
 
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 대기
+        await pause(1000); // 1초 대기
 
         // 크기 비교 후, 더 작은 bar 선택
         if (result[j] < result[indexMin]) {
@@ -76,16 +77,16 @@ export class SelectionSortVisualizer extends SortingVisualizer {
         } else {
           BarRenderer.setBackgroundColor("", barsElement[j]); // bar2 취소
         }
-        
+
         // 마지막 인덱스 저장
         lastIndex = j;
       }
       // 최종 비교: 가장 작은 값을 1초간 표시
       if (result[indexMin] < result[lastIndex]) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await pause(1000);
         BarRenderer.setBackgroundColor("", barsElement[indexMin]);
       } else {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await pause(1000);
         BarRenderer.setBackgroundColor("", barsElement[lastIndex]);
       }
       // 스왑

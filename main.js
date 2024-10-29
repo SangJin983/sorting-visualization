@@ -1,9 +1,10 @@
 import { generateRandomArray } from "./utils/generateRandomArray";
-import { ArrayRenderer } from "./Renderer";
+import { BarGroupRenderer } from "./Renderer";
 import {
   BubbleSortVisualizer,
   SelectionSortVisualizer,
 } from "./SortingVisualizer";
+import { Model } from "./Model";
 
 const selectContainerElement = document.querySelector(".select-container");
 const arrayContainerElement = document.querySelector(".array-container");
@@ -13,44 +14,35 @@ const sortingBtnElement = document.querySelector(".sorting-btn");
 
 const buttons = Array.from(btnContainerElement.children);
 
-// 알고리즘을 선택
-let selectedSortAlgorithm;
+// 알고리즘을 선택 (model)
+const model = new Model();
+model.setData(Model.SELECTED_ALGORITHM, "none");
 
 selectContainerElement.addEventListener("change", (event) => {
-  arrayContainerElement.innerHTML = "" // 배열 컨테이너 초기화
-  selectedSortAlgorithm = createSortVisualizer(event.target.value);
+  arrayContainerElement.innerHTML = ""; // 배열 컨테이너 초기화
+  model.setData(Model.SELECTED_ALGORITHM, event.target.value);
 });
-
-const createSortVisualizer = (value) => {
-  if (value === "bubble") {
-    return (array, bars) => {
-      return new BubbleSortVisualizer(array, bars);
-    };
-  }
-
-  if (value === "selection") {
-    return (array, bars) => {
-      return new SelectionSortVisualizer(array, bars);
-    };
-  }
-
-  return null;
-};
 
 // `배열 생성` 버튼 클릭시, 무작위 배열 생성 (10 ~ 100)
 generateBtnElement.addEventListener("click", () => {
-  if (!selectedSortAlgorithm) {
+  if (
+    !model.hasData(Model.SELECTED_ALGORITHM) ||
+    model.getData(Model.SELECTED_ALGORITHM) === "none"
+  ) {
     console.error("정렬 알고리즘이 선택되지 않았습니다.");
     return;
   }
-  
+
   const initialArray = generateRandomArray(10, 10, 100); // size, min, max
-  ArrayRenderer.render(initialArray, arrayContainerElement);
+  BarGroupRenderer.render(initialArray, arrayContainerElement);
 });
 
 // `정렬 시작` 버튼 클릭시, 선택한 정렬 실행
 sortingBtnElement.addEventListener("click", async () => {
-  if (!selectedSortAlgorithm) {
+  if (
+    !model.hasData(Model.SELECTED_ALGORITHM) ||
+    model.getData(Model.SELECTED_ALGORITHM) === "none"
+  ) {
     console.error("정렬 알고리즘이 선택되지 않았습니다.");
     return;
   }
@@ -62,7 +54,11 @@ sortingBtnElement.addEventListener("click", async () => {
 
   const bars = getBars();
   const array = getArrayFromItems(bars);
-  const sortVisualizer = selectedSortAlgorithm(array, bars);
+
+  const sortVisualizer =
+    model.getData(Model.SELECTED_ALGORITHM) === "bubble"
+      ? new BubbleSortVisualizer(array, bars)
+      : new SelectionSortVisualizer(array, bars);
 
   setButtonDisabled(true, buttons);
   await sortVisualizer.visualize();
