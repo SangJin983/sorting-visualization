@@ -80,9 +80,14 @@ export class SelectionSortVisualizer extends SortingVisualizer {
         // 마지막 인덱스 저장
         lastIndex = j;
       }
-      // 비교 bar 리셋
-      BarRenderer.setBackgroundColor("", barsElement[lastIndex]);
-      BarRenderer.setBackgroundColor("", barsElement[indexMin]);
+      // 최종 비교: 가장 작은 값을 1초간 표시
+      if (result[indexMin] < result[lastIndex]) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        BarRenderer.setBackgroundColor("", barsElement[indexMin]);
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        BarRenderer.setBackgroundColor("", barsElement[lastIndex]);
+      }
       // 스왑
       [result[i], result[indexMin]] = [result[indexMin], result[i]];
       BarRenderer.updateBar(result[i], barsElement[i]);
