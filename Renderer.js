@@ -4,7 +4,7 @@ export class Renderer {
   }
 }
 
-export class ArrayRenderer {
+export class BarGroupRenderer {
   static render(array, container) {
     container.innerHTML = ""; // container 초기화
 
