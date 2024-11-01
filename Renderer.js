@@ -1,10 +1,22 @@
+import { pause } from "./utils/pause";
+
 export class Renderer {
   render() {
     throw new Error("상속을 통해서 구현하세요!");
   }
 }
 
-export class BarGroupRenderer {
+export class SnapshotsRenderer extends Renderer {
+  static async render(snapshots, container) {
+    for (const obj of snapshots) {
+      BarGroupRenderer.render(obj.snapshot, container);
+      highlightRenderer.render(obj.highlights);
+      await pause(1000);
+    }
+  }
+}
+
+export class BarGroupRenderer extends Renderer {
   static render(array, container) {
     container.innerHTML = ""; // container 초기화
 
@@ -31,5 +43,14 @@ export class BarRenderer extends Renderer {
   static updateBar(value, bar) {
     bar.style.height = `${value * 3}px`;
     bar.textContent = value;
+  }
+}
+
+export class highlightRenderer extends Renderer {
+  static render(indices) {
+    const barGroup = document.querySelectorAll(".array-bar");
+    barGroup.forEach((bar, index) => {
+      bar.style.backgroundColor = indices.includes(index) ? "red" : "";
+    });
   }
 }
