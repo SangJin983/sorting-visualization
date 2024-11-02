@@ -1,7 +1,7 @@
 import { generateRandomArray } from "./utils/generateRandomArray";
 import { SnapshotsRenderer, BarGroupRenderer } from "./Renderer";
 import { Model } from "./Model";
-import { createBubbleSortSnapshots } from "./SortController";
+import { SortController } from "./SortController";
 
 const selectContainerElement = document.querySelector(".select-container");
 const arrayContainerElement = document.querySelector(".array-container");
@@ -11,11 +11,15 @@ const sortingBtnElement = document.querySelector(".sorting-btn");
 
 const buttons = Array.from(btnContainerElement.children);
 
-// 알고리즘을 선택
+// Model 인스턴스 생성 및 초기화
 const model = new Model();
 model.setData(Model.SELECTED_ALGORITHM, "none");
 model.setData(Model.SORT_SANPSHOTS, []); // 초기화
 
+// SortController 생성
+const sortController = SortController;
+
+// 정렬 알고리즘 선택
 selectContainerElement.addEventListener("change", (event) => {
   arrayContainerElement.innerHTML = ""; // 배열 컨테이너 초기화
   model.setData(Model.SELECTED_ALGORITHM, event.target.value);
@@ -51,15 +55,21 @@ sortingBtnElement.addEventListener("click", async () => {
   }
 
   setButtonDisabled(true, buttons);
+
   model.setData(Model.SORT_SANPSHOTS, []); // 기존 snapshot 데이터 초기화
-  createBubbleSortSnapshots(
+
+  // 스냅샷 생성
+  sortController[model.getData(Model.SELECTED_ALGORITHM)](
     getArrayFromItems(getBars()),
-    model.addSortSnapshot.bind(model) // 바인딩!!!!!!!
+    model.addSortSnapshot.bind(model)
   );
+
+  // 스냅샷 랜더링
   await SnapshotsRenderer.render(
     model.getData(Model.SORT_SANPSHOTS),
     arrayContainerElement
   );
+
   setButtonDisabled(false, buttons);
 });
 

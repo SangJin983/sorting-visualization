@@ -35,15 +35,6 @@ export class BarRenderer extends Renderer {
     barElement.textContent = value;
     container.append(barElement);
   }
-
-  static setBackgroundColor(color, ...bars) {
-    bars.forEach((bar) => (bar.style.backgroundColor = color));
-  }
-
-  static updateBar(value, bar) {
-    bar.style.height = `${value * 3}px`;
-    bar.textContent = value;
-  }
 }
 
 export class highlightRenderer extends Renderer {
