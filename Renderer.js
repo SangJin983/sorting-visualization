@@ -7,12 +7,24 @@ export class Renderer {
 }
 
 export class SnapshotsRenderer extends Renderer {
+  static isRendering = false;
+
   static async render(snapshots, container) {
+    this.isRendering = true;
     for (const { snapshot, highlights } of snapshots) {
+      // 랜더링 중단 조건
+      if (!this.isRendering) {
+        break;
+      }
       BarGroupRenderer.render(snapshot, container);
       highlightRenderer.render(highlights);
       await pause(1000);
     }
+    this.isRendering = false;
+  }
+
+  static cancleRendering() {
+    this.isRendering = false;
   }
 }
 

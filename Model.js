@@ -1,8 +1,8 @@
 export class Model {
   static SELECTED_ALGORITHM = "selectedAlgorithm";
-  static SORT_SANPSHOTS = "sortingSnapshot";
+  static SORT_SNAPSHOTS = "sortingSnapshot";
 
-  #data = {};
+  #data = { [Model.SORT_SNAPSHOTS]: [] };
 
   setData(key, value) {
     this.#data[key] = value;
@@ -17,10 +17,7 @@ export class Model {
   }
 
   addSortSnapshot(array, highlightedIndices) {
-    if (!this.hasData(Model.SORT_SANPSHOTS)) {
-      this.setData([Model.SORT_SANPSHOTS], []);
-    }
-    this.#data[Model.SORT_SANPSHOTS].push({
+    this.#data[Model.SORT_SNAPSHOTS].push({
       snapshot: array,
       highlights: highlightedIndices,
     });
