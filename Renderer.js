@@ -8,9 +8,9 @@ export class Renderer {
 
 export class SnapshotsRenderer extends Renderer {
   static async render(snapshots, container) {
-    for (const obj of snapshots) {
-      BarGroupRenderer.render(obj.snapshot, container);
-      highlightRenderer.render(obj.highlights);
+    for (const { snapshot, highlights } of snapshots) {
+      BarGroupRenderer.render(snapshot, container);
+      highlightRenderer.render(highlights);
       await pause(1000);
     }
   }
