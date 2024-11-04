@@ -1,46 +1,44 @@
 import { swap } from "./utils/swap";
 
-export const SortController = (snapshotCallback) => {
-  const addSnapshot = (array, indices) => {
-    snapshotCallback([...array], [...indices]);
-  };
-
-  const createBubbleSnapshots = (array) => {
+export const SortController = {
+  createBubbleSnapshots: (array) => {
     const result = [...array];
+    const snapshots = [];
 
     for (let i = 0; i < result.length; i += 1) {
       for (let j = 0; j < result.length - i - 1; j += 1) {
-        addSnapshot(result, [j, j + 1]);
+        snapshots.push({ snapshot: [...result], highlights: [j, j + 1] });
 
         if (result[j] > result[j + 1]) {
           swap(result, j, j + 1);
         }
       }
     }
-    addSnapshot(result, []);
-  };
+    snapshots.push({ snapshot: [...result], highlights: [] });
 
-  const createSelectionSnapshots = (array) => {
+    return snapshots;
+  },
+
+  createSelectionSnapshots: (array) => {
     const result = [...array];
+    const snapshots = [];
+
     let indexMin;
 
     for (let i = 0; i < result.length - 1; i += 1) {
       indexMin = i;
       for (let j = i + 1; j < result.length; j += 1) {
-        addSnapshot(result, [indexMin, j]);
+        snapshots.push({ snapshot: [...result], highlights: [indexMin, j] });
 
         if (result[j] < result[indexMin]) {
           indexMin = j;
         }
       }
-      addSnapshot(result, [indexMin]);
+      snapshots.push({ snapshot: [...result], highlights: [indexMin] });
       swap(result, i, indexMin);
     }
-    addSnapshot(result, []);
-  }
+    snapshots.push({ snapshot: [...result], highlights: [] });
 
-  return {
-    bubble: createBubbleSnapshots,
-    selection: createSelectionSnapshots,
-  };
+    return snapshots;
+  },
 };

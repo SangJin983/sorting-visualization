@@ -14,10 +14,6 @@ const buttons = Array.from(btnContainerElement.children);
 // Model 인스턴스 생성 및 초기화
 const model = new Model();
 model.setData(Model.SELECTED_ALGORITHM, "none");
-model.setData(Model.SORT_SNAPSHOTS, []); // 초기화
-
-// SortController 인스턴스 생성
-const sortController = SortController(model.addSortSnapshot.bind(model));
 
 // 정렬 알고리즘 선택
 selectContainerElement.addEventListener("change", (event) => {
@@ -57,12 +53,16 @@ sortingBtnElement.addEventListener("click", async () => {
 
   setButtonDisabled(true, buttons);
 
-  model.setData(Model.SORT_SNAPSHOTS, []);
+  model.setData(Model.SORT_SNAPSHOTS, null);
 
   // 스냅샷 생성
-  sortController[model.getData(Model.SELECTED_ALGORITHM)](
-    getArrayFromItems(getBars()),
-  );
+  const selectedAlgorithm = model.getData(Model.SELECTED_ALGORITHM);
+  const snapshots =
+    selectedAlgorithm === "bubble"
+      ? SortController.createBubbleSnapshots(getArrayFromItems(getBars()))
+      : SortController.createSelectionSnapshots(getArrayFromItems(getBars()));
+      
+  model.setData(Model.SORT_SNAPSHOTS, snapshots);
 
   // 스냅샷 랜더링
   await SnapshotsRenderer.render(
