@@ -11,14 +11,19 @@ export class SnapshotsRenderer extends Renderer {
 
   static async render(snapshots, container) {
     this.isRendering = true;
-    for (const { snapshot, highlights } of snapshots) {
+    for (const { snapshot, highlights, swap } of snapshots) {
       // 랜더링 중단 조건
       if (!this.isRendering) {
         break;
       }
       BarGroupRenderer.render(snapshot, container);
       highlightRenderer.render(highlights);
-      await pause(1000);
+      await pause(0);
+      // 스왑 랜더링
+      if (Object.keys(swap).length > 0) {
+        BarGroupRenderer.updateSwappedBars(swap);
+      }
+      await pause(800);
     }
     this.isRendering = false;
   }
@@ -37,13 +42,27 @@ export class BarGroupRenderer extends Renderer {
       BarRenderer.render(value, container); // container에 해당 value의 bar 그리기
     });
   }
+
+  static updateSwappedBars(swap) {
+    const barGroup = document.querySelectorAll(".array-bar");
+
+    Object.entries(swap).forEach(([index, newValue]) => {
+      const bar = barGroup[Number(index)];
+
+      if (bar) {
+        bar.style.backgroundColor = "green";
+        bar.style.height = `${newValue * 3}px`; // 높이 변경
+        bar.textContent = newValue;
+      }
+    });
+  }
 }
 
 export class BarRenderer extends Renderer {
   static render(value, container) {
     const barElement = document.createElement("div");
     barElement.className = "array-bar";
-    barElement.style.height = `${value * 3}px`; // bar 높이 설정
+    barElement.style.height = `${value * 3}px`;
     barElement.textContent = value;
     container.append(barElement);
   }
